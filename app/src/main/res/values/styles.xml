@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define a custom theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize the color of the up button -->
+        <item name="colorControlNormal">@color/white</item>
+        <!-- Customize the color of the status bar -->
+        <item name="colorPrimaryDark">@color/green</item>
+    </style>
+</resources>
