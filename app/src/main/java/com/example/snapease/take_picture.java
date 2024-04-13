@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -44,11 +45,22 @@ public class take_picture extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         // Request camera permissions if not granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
-        } else {
-            dispatchTakePictureIntent();
-        }
+
+        Button takeAPicButton= findViewById(R.id.takeAPicButton);
+        takeAPicButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ContextCompat.checkSelfPermission(take_picture.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(take_picture.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+                        } else {
+                            dispatchTakePictureIntent();
+                        }
+                    }
+                }
+        );
+
+
     }
 
     @Override
