@@ -1,8 +1,10 @@
 package com.example.snapease;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,18 +23,28 @@ import androidx.core.view.WindowInsetsCompat;
 import android.Manifest;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class take_picture extends AppCompatActivity {
     private static final String LOG_TAG = take_picture.class.getSimpleName();
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 101;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 102;
     private ImageView imageView;
+    private Bitmap imageBitmap;
+
+    String imageDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_take_picture);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.click_event), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -45,6 +57,19 @@ public class take_picture extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         // Request camera permissions if not granted
+
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Context context = getApplicationContext();
+                CharSequence text = "Click Event!";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast =
+                        Toast.makeText(context, imageDate, duration);
+                toast.show();
+                return true;
+            }
+        });
 
         Button takeAPicButton= findViewById(R.id.takeAPicButton);
         takeAPicButton.setOnClickListener(
@@ -59,9 +84,9 @@ public class take_picture extends AppCompatActivity {
                     }
                 }
         );
-
-
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -93,12 +118,51 @@ public class take_picture extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if (data != null && data.getExtras() != null) {
                 Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                 imageBitmap = (Bitmap) extras.get("data");
                 imageView.setImageBitmap(imageBitmap);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                imageDate = dateFormat.format(new Date());
             } else {
                 Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private String getImageDateFromMetadata(Bitmap imageBitmap) {
+        try {
+            // Create a temporary file to save the Bitmap
+            File tempFile = createTempFile(imageBitmap);
+
+            // Create an ExifInterface instance to read the metadata
+            ExifInterface exifInterface = new ExifInterface(tempFile.getAbsolutePath());
+
+            // Get the date and time the image was taken
+            String dateTime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+
+            // Format the date and time if available
+            if (dateTime != null) {
+                // dateTime format may vary, you may need to parse it accordingly
+                return dateTime;
+            } else {
+                return "Date not available";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error reading metadata";
+        }
+    }
+
+    private File createTempFile(Bitmap bitmap) throws IOException {
+        // Create a temporary file in the app's cache directory
+        File tempFile = new File(getApplicationContext().getCacheDir(), "temp_image.jpg");
+
+        // Write the Bitmap to the temporary file
+        FileOutputStream out = new FileOutputStream(tempFile);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        out.flush();
+        out.close();
+
+        return tempFile;
     }
 
     public void takeAPic(View v){
