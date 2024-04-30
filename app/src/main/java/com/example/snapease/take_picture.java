@@ -34,8 +34,11 @@ public class take_picture extends AppCompatActivity {
     private static final String LOG_TAG = take_picture.class.getSimpleName();
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 101;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 102;
-    private ImageView imageView;
-    private Bitmap imageBitmap;
+    private ImageView imageView1;
+    private ImageView imageView2;
+
+    private Bitmap image1Bitmap;
+    private Bitmap image2Bitmap;
 
     String imageDate;
 
@@ -55,18 +58,33 @@ public class take_picture extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(LOG_TAG, "onCreate");
 
-        imageView = findViewById(R.id.imageView);
+        imageView1 = findViewById(R.id.imageView1);
+        imageView2 = findViewById(R.id.imageView2);
         // Request camera permissions if not granted
 
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        imageView1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Context context = getApplicationContext();
-                CharSequence text = "Click Event!";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast =
-                        Toast.makeText(context, imageDate, duration);
-                toast.show();
+                if(image2Bitmap != null){
+                    image1Bitmap=image2Bitmap;
+                    image2Bitmap=null;
+                    imageView2.setImageBitmap(null);
+                    imageView1.setImageBitmap(image1Bitmap);
+                }
+                else {
+                    imageView1.setImageBitmap(null);
+                    image1Bitmap=null;
+                }
+                return true;
+            }
+        });
+        imageView2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                imageView2.setImageBitmap(null);
+                image2Bitmap=null;
                 return true;
             }
         });
@@ -118,10 +136,14 @@ public class take_picture extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if (data != null && data.getExtras() != null) {
                 Bundle extras = data.getExtras();
-                 imageBitmap = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(imageBitmap);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                imageDate = dateFormat.format(new Date());
+                if(image1Bitmap == null){
+                    image1Bitmap = (Bitmap) extras.get("data");
+                }else{
+                    image2Bitmap = (Bitmap) extras.get("data");
+                }
+
+                imageView1.setImageBitmap(image1Bitmap);
+                imageView2.setImageBitmap(image2Bitmap);
             } else {
                 Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
             }
