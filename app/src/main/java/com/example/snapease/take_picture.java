@@ -40,7 +40,8 @@ public class take_picture extends AppCompatActivity {
     private Bitmap image1Bitmap;
     private Bitmap image2Bitmap;
 
-    String imageDate;
+    String image1Date;
+    String image2Date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,13 @@ public class take_picture extends AppCompatActivity {
                     image2Bitmap=null;
                     imageView2.setImageBitmap(null);
                     imageView1.setImageBitmap(image1Bitmap);
+                    image2Date=image1Date;
+                    image1Date=null;
                 }
                 else {
                     imageView1.setImageBitmap(null);
                     image1Bitmap=null;
+                    image1Date=null;
                 }
                 return true;
             }
@@ -85,6 +89,7 @@ public class take_picture extends AppCompatActivity {
             public boolean onLongClick(View view) {
                 imageView2.setImageBitmap(null);
                 image2Bitmap=null;
+                image2Date=null;
                 return true;
             }
         });
@@ -102,6 +107,20 @@ public class take_picture extends AppCompatActivity {
                     }
                 }
         );
+
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),  image1Date, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), image2Date, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -134,12 +153,17 @@ public class take_picture extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String currentDate = dateFormat.format(new Date());
+
             if (data != null && data.getExtras() != null) {
                 Bundle extras = data.getExtras();
                 if(image1Bitmap == null){
                     image1Bitmap = (Bitmap) extras.get("data");
+                    image1Date = currentDate;
                 }else{
                     image2Bitmap = (Bitmap) extras.get("data");
+                    image2Date=currentDate;
                 }
 
                 imageView1.setImageBitmap(image1Bitmap);
