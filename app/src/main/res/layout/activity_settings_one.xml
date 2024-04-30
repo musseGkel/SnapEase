@@ -9,13 +9,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="228dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="1dp"
         android:background="#4CAF50"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,60 +26,101 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="354dp"
+        android:layout_marginBottom="25dp"
         android:text="Settings of the Camera PART 1"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/returnButton"
+        app:layout_constraintBottom_toTopOf="@+id/settingsTwoButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/returnButton"
-        android:layout_width="119dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="4dp"
         android:text="RETURN"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/settingsTwoButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/settingsTwoButton" />
 
     <Button
         android:id="@+id/settingsTwoButton"
-        android:layout_width="189dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="1dp"
         android:text="GO TO SETTINGS 2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/returnButton"
-        app:layout_constraintTop_toBottomOf="@+id/clickEvent" />
+        app:layout_constraintStart_toEndOf="@+id/returnButton" />
 
     <Button
         android:id="@+id/eventTestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginTop="15dp"
         android:text="TEST LISTENERS "
-        app:layout_constraintBottom_toTopOf="@+id/clickEvent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
     <TextView
         android:id="@+id/clickEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="519dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="22dp"
         android:text="No Event Detected"
-        app:layout_constraintBottom_toTopOf="@+id/settingsTwoButton"
+        app:layout_constraintEnd_toEndOf="@+id/eventTestButton"
+        app:layout_constraintTop_toBottomOf="@+id/eventTestButton" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:text="Save Text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <Button
+        android:id="@+id/readTextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
+        android:text="Read Text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <TextView
+        android:id="@+id/readTextView"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="34dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTestButton" />
+        app:layout_constraintTop_toBottomOf="@+id/readTextButton" />
+
+    <EditText
+        android:id="@+id/saveInputText"
+        android:layout_width="309dp"
+        android:layout_height="101dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="72dp"
+        android:ems="10"
+        android:hint="insert text to Save on a File"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@+id/readTextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/clickEvent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
