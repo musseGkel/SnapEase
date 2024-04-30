@@ -92,8 +92,6 @@ public class settings_one extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String inputText= String.valueOf(saveInputText.getText());
-                System.out.println("inputText: "+ inputText);
-                System.out.println("inputText.length: "+ inputText.length());
                 if(inputText.length()>0){
                     try {
                         saveTextToStorage(inputText, context);

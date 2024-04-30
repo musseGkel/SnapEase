@@ -1,6 +1,7 @@
 package com.example.snapease;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -43,6 +44,8 @@ public class take_picture extends AppCompatActivity {
     String image1Date;
     String image2Date;
 
+    Button saveLastPhotoButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,8 @@ public class take_picture extends AppCompatActivity {
 
         imageView1 = findViewById(R.id.imageView1);
         imageView2 = findViewById(R.id.imageView2);
-        // Request camera permissions if not granted
+
+        saveLastPhotoButton = findViewById(R.id.saveLastPhotoButton);
 
 
 
@@ -121,8 +125,39 @@ public class take_picture extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), image2Date, Toast.LENGTH_SHORT).show();
             }
         });
+
+        saveLastPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap bitMapToBeSaved= image2Bitmap!=null? image2Bitmap:image1Bitmap;
+                saveToInternalStorage(bitMapToBeSaved);
+            }
+        });
     }
 
+    private String saveToInternalStorage(Bitmap bitmapImage){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,"profile.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
+    }
 
 
     @Override
@@ -209,10 +244,6 @@ public class take_picture extends AppCompatActivity {
         out.close();
 
         return tempFile;
-    }
-
-    public void takeAPic(View v){
-        System.out.println("Taking a PIC!!");
     }
 
     @Override

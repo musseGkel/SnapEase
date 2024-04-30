@@ -1,10 +1,15 @@
 package com.example.snapease;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,8 +18,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    ImageView lastSavedimageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        loadImageFromStorage();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         Button cameraSettingsButton = findViewById(R.id.cameraSettingsButton);
+        lastSavedimageView= findViewById(R.id.lastSavedimageView);
         cameraSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +65,23 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(LOG_TAG, "onCreate");
     }
+    private void loadImageFromStorage()
+    {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File path = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        try {
+            File f=new File(path, "profile.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            ImageView img=(ImageView)findViewById(R.id.lastSavedimageView);
+            img.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
