@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +45,7 @@ public class take_picture extends AppCompatActivity {
     String image1Date;
     String image2Date;
 
-    Button saveLastPhotoButton;
+    Button saveLastPhotoButton, saveToExternalButton, saveToSDButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +67,8 @@ public class take_picture extends AppCompatActivity {
         imageView2 = findViewById(R.id.imageView2);
 
         saveLastPhotoButton = findViewById(R.id.saveLastPhotoButton);
-
-
-
+        saveToExternalButton=findViewById(R.id.saveToExternalButton);
+        saveToSDButton= findViewById(R.id.saveToSDButton);
         imageView1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -130,23 +130,50 @@ public class take_picture extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bitmap bitMapToBeSaved= image2Bitmap!=null? image2Bitmap:image1Bitmap;
-                saveToInternalStorage(bitMapToBeSaved);
+                if(bitMapToBeSaved==null){
+                    showToast("No Image Found!");
+                }else{
+                    saveToInternalStorage(bitMapToBeSaved);
+                }
+            }
+        });
+
+        saveToExternalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap bitMapToBeSaved= image2Bitmap!=null? image2Bitmap:image1Bitmap;
+                if(bitMapToBeSaved==null){
+                    showToast("No Image Found!");
+                }else{
+                    saveToExternalStorage(bitMapToBeSaved);
+                }
+            }
+        });
+
+        saveToSDButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap bitMapToBeSaved= image2Bitmap!=null? image2Bitmap:image1Bitmap;
+                if(bitMapToBeSaved==null){
+                    showToast("No Image Found!");
+                }else{
+                    saveToSDCard(bitMapToBeSaved);
+                }
             }
         });
     }
 
     private String saveToInternalStorage(Bitmap bitmapImage){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,"profile.jpg");
-
+        File mypath=new File(directory,"last_picture.jpg");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            showToast("Image saved to Internal storage");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -209,41 +236,69 @@ public class take_picture extends AppCompatActivity {
         }
     }
 
-    private String getImageDateFromMetadata(Bitmap imageBitmap) {
-        try {
-            // Create a temporary file to save the Bitmap
-            File tempFile = createTempFile(imageBitmap);
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            showToast("Ready");
+            return true;
+        }
+        return false;
+    }
 
-            // Create an ExifInterface instance to read the metadata
-            ExifInterface exifInterface = new ExifInterface(tempFile.getAbsolutePath());
-
-            // Get the date and time the image was taken
-            String dateTime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
-
-            // Format the date and time if available
-            if (dateTime != null) {
-                // dateTime format may vary, you may need to parse it accordingly
-                return dateTime;
-            } else {
-                return "Date not available";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error reading metadata";
+    public void saveToExternalStorage(Bitmap bitmap){
+        if(isExternalStorageWritable()){
+            File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(getApplicationContext(), Environment.DIRECTORY_PICTURES);
+            // probably a partition of the device internal memory as external storage
+            File pathPrimaryExternalStorage = externalStorageVolumes[0];
+            long freeSpaceBytes = pathPrimaryExternalStorage.getFreeSpace();
+            String freeSpaceReadable = formatFileSize(freeSpaceBytes);
+            showToast(freeSpaceReadable);
+            storeOnAPath(pathPrimaryExternalStorage, bitmap);
         }
     }
 
-    private File createTempFile(Bitmap bitmap) throws IOException {
-        // Create a temporary file in the app's cache directory
-        File tempFile = new File(getApplicationContext().getCacheDir(), "temp_image.jpg");
+    public void saveToSDCard(Bitmap bitmap){
+        if(isExternalStorageWritable()){
+            File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(getApplicationContext(), Environment.DIRECTORY_PICTURES);
+            // probably this is the SD card
+            File pathSecondaryExternalStorage = externalStorageVolumes[1];
+            long freeSpaceBytes = pathSecondaryExternalStorage.getFreeSpace();
+            String freeSpaceReadable = formatFileSize(freeSpaceBytes);
+            showToast(freeSpaceReadable);
+            storeOnAPath(pathSecondaryExternalStorage, bitmap);
+        }
+    }
 
-        // Write the Bitmap to the temporary file
-        FileOutputStream out = new FileOutputStream(tempFile);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        out.flush();
-        out.close();
+    public static String formatFileSize(long sizeBytes) {
+        if (sizeBytes <= 0) return "0 B";
 
-        return tempFile;
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(sizeBytes) / Math.log10(1024));
+
+        return String.format("%.1f %s", sizeBytes / Math.pow(1024, digitGroups), units[digitGroups]);
+    }
+
+
+    public void storeOnAPath(File filePath, Bitmap bitmap) {
+            Context context = getApplicationContext();
+            // Create a file to save the image
+            File imageFile = new File(filePath, "last_picture.jpg");
+            try {
+                // Write the bitmap to the file
+                FileOutputStream outputStream = new FileOutputStream(imageFile);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+                showToast("Image saved to external storage: " + imageFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                showToast("Failed to save image to external storage");
+            }
+    }
+
+    private void showToast(String message) {
+        Context context = getApplicationContext();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -9,12 +9,12 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="312dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
         android:background="#4CAF50"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,45 +25,96 @@
         android:id="@+id/takePicButton"
         android:layout_width="148dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="29dp"
+        android:layout_marginTop="103dp"
+        android:layout_marginBottom="112dp"
         android:text="TAKE A PICTURE"
-        app:layout_constraintBottom_toTopOf="@+id/cameraSettingsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/cameraSettingsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <Button
         android:id="@+id/cameraSettingsButton"
         android:layout_width="160dp"
         android:layout_height="61dp"
-        android:layout_marginBottom="418dp"
+        android:layout_marginTop="209dp"
         android:text="CAMERA SETTINGS"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/takePicButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
+        android:layout_marginTop="72dp"
         android:text="Your Last Photo"
-        app:layout_constraintBottom_toTopOf="@+id/lastSavedimageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraSettingsButton" />
 
     <ImageView
-        android:id="@+id/lastSavedimageView"
-        android:layout_width="216dp"
-        android:layout_height="245dp"
-        android:layout_marginBottom="115dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/lastSavedExternal"
+        android:layout_width="125dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:srcCompat="@android:drawable/divider_horizontal_bright" />
+
+    <ImageView
+        android:id="@+id/lastSavedimageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="151dp"
+        app:layout_constraintBottom_toBottomOf="@+id/lastSavedExternal"
+        app:layout_constraintEnd_toStartOf="@+id/lastSavedSDCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lastSavedExternal"
+        app:srcCompat="@android:drawable/divider_horizontal_bright" />
+
+    <ImageView
+        android:id="@+id/lastSavedSDCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/lastSavedExternal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lastSavedimageView"
+        app:layout_constraintTop_toTopOf="@+id/lastSavedExternal"
+        app:srcCompat="@android:drawable/divider_horizontal_bright" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="21dp"
+        android:text="INT Storage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastSavedimageView" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="1dp"
+        android:text="EXT Storage"
+        app:layout_constraintStart_toStartOf="@+id/lastSavedExternal"
+        app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="113dp"
+        android:text="EXT Storage SD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

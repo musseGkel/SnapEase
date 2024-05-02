@@ -6,16 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:onClick="takeAPic"
-    tools:context=".take_picture">
+    tools:context=".take_picture"
+    tools:layout_editor_absoluteX="10dp"
+    tools:layout_editor_absoluteY="-1dp">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="71dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
         android:background="#4CAF50"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintBottom_toTopOf="@+id/takeAPicButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,48 +28,63 @@
         android:id="@+id/takeAPicButton"
         android:layout_width="136dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginBottom="65dp"
         android:drawableLeft="@android:drawable/ic_menu_camera"
         android:text="CLICK!"
-        app:layout_constraintBottom_toTopOf="@+id/imageView1"
+        app:layout_constraintBottom_toBottomOf="@+id/saveToExternalButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="101dp"
+        android:layout_width="325dp"
+        android:layout_height="164dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/takeAPicButton"
+        app:layout_constraintTop_toTopOf="@+id/saveLastPhotoButton"
         app:srcCompat="@android:drawable/divider_horizontal_dark" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="49dp"
+        android:layout_width="325dp"
+        android:layout_height="164dp"
+        android:layout_marginBottom="62dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView1"
         app:srcCompat="@android:drawable/menuitem_background" />
 
     <Button
         android:id="@+id/saveLastPhotoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:text="SAVE LAST PHOTO"
+        android:layout_marginStart="12dp"
+        android:text="SAVE (INT)"
+        app:layout_constraintBaseline_toBaselineOf="@+id/saveToExternalButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/saveToExternalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="196dp"
+        android:text="SAVE (EXT)"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/takeAPicButton" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/saveToSDButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="SAVE (SD)"
+        app:layout_constraintBaseline_toBaselineOf="@+id/saveToExternalButton"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

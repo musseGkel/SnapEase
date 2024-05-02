@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,7 +26,7 @@ import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    ImageView lastSavedimageView;
+    ImageView lastSavedimageView, lastSavedExternal, lastSavedSDCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        loadImageFromStorage();
+
+        loadImageFromInternalStorage();
+        loadImageFromExternalStorage();
+        loadImageFromExternalSDCard();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,15 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         Log.d(LOG_TAG, "onCreate");
     }
-    private void loadImageFromStorage()
+    private void loadImageFromInternalStorage()
     {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File path = cw.getDir("imageDir", Context.MODE_PRIVATE);
         try {
-            File f=new File(path, "profile.jpg");
+            File f=new File(path, "last_picture.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             ImageView img=(ImageView)findViewById(R.id.lastSavedimageView);
             img.setImageBitmap(b);
@@ -80,6 +84,38 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void loadImageFromExternalStorage()
+    {
+        File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(getApplicationContext(), Environment.DIRECTORY_PICTURES);
+        File pathPrimaryExternalStorage = externalStorageVolumes[0];
+        try {
+            File fileExternal = new File(pathPrimaryExternalStorage, "last_picture.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(fileExternal));
+            ImageView img=(ImageView)findViewById(R.id.lastSavedExternal);
+            img.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadImageFromExternalSDCard()
+    {
+        File[] externalStorageVolumes = ContextCompat.getExternalFilesDirs(getApplicationContext(), Environment.DIRECTORY_PICTURES);
+        File pathSecondaryExternalStorage = externalStorageVolumes[1];
+        try {
+            File fileExternalSDCard = new File(pathSecondaryExternalStorage, "last_picture.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(fileExternalSDCard));
+            ImageView img=(ImageView)findViewById(R.id.lastSavedSDCard);
+            img.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
